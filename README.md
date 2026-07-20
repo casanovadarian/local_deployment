@@ -37,3 +37,31 @@ keytool -genkeypair -alias keystore_local -keyalg RSA -keysize 2048 \
 docker compose down
 docker compose up -d
 ```
+# Jenkins
+1. Configure GitHub, SonarQube and Kubernetes tokens.
+2. Install the "SonarQube Scanner for Jenkins" plugin.
+3. Add SonarQube servers under Configuration > System.
+
+**Install kubectl in Jenkins container**
+For exec container as root:
+```bash
+docker exec -u 0 -it jenkins bash
+```
+Inside the container, run the fallowing commands to download and install kubectl the official kubectl binary
+```bash
+# 1. Download the kubectl binary
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# 2. Add executable permission and move it to the system path.
+chmod +x kubectl
+mv kubectl /usr/local/bin/
+# 3. Verify the installation
+kubectl version --client
+# 4. Exit the container
+exit
+```
+
+# SonarQube
+1. Generate token for Jenkins in My Account>Security. 
+2. Create a webhook in Administration>Configuration>Webhooks
+(http://jenkins:8080/sonarqube-webhook/)
+
